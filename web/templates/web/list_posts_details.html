@@ -1,0 +1,8 @@
+{% for d in details %}
+Publie le {{ d.date_pub }}<br>
+Titre: {{ d.titre }}
+{{ d.body }}
+{% if d.fichier.image %}
+  {{ d.fichier.iimage }}
+{% endif %}
+{% endfor %}

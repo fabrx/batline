@@ -1,0 +1,19 @@
+
+{% include "web/base.html" %}
+
+<div class="partie_centrale">
+{% for fac in f %}
+
+<div class="article">	 
+	 <a href="{% url 'web:promotion' cle=fac.id  %}"><img src="{{ fac.logo.url }}"  class="img-article"><br/>{{ fac.nom_fac }}</a>
+	 <br/><br/><br/>
+</div>
+
+{% endfor %}
+</div>
+
+ <div class="forum">
+    {% include "web/forum.html" %}
+  </div>
+
+ {% include "web/pieds.html" %}

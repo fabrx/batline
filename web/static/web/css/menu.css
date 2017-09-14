@@ -1,0 +1,21 @@
+body{
+	margin: 0px;
+	padding: 0px;
+}
+
+nav > li{
+	margin: 0px;
+	padding: 0px;
+}
+
+nav > ul > li{
+	float: left;
+}
+
+nav li{
+	list-style-type: none;
+}
+
+.sous_menu{
+	display: none;
+}

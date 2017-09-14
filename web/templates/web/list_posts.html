@@ -1,0 +1,3 @@
+{% for p in posts %}
+  Titre:<a href="{% url 'web:detail-posts' pk=p.id %}">{{ p.titre }}</a>&nbsp;publie le {{ p.date_pub }}<br>
+{% endfor %}

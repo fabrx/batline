@@ -1,0 +1,16 @@
+{% include "web/base.html" %}
+
+<div class="partie_centrale">
+{% for brch in b %}
+
+	<b>{{ brch.nom_branche }}</b><br/>
+	{% for cat in brch.branche_categorie.all %}
+
+		<a href="{% url 'web:fichier' cat=cat.id %}">{{ cat.nom_cat }}</a><br>
+
+	{% endfor %}
+
+{% endfor %}
+</div>
+
+{% include "web/pieds.html" %}

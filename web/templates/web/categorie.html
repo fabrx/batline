@@ -1,0 +1,11 @@
+{% for cat in c %}
+
+	<a href="{% url'web:fichier' cle=cat.id %}">{% cat.nom_cat</a>
+	<br/><br/>
+	{% for cat in brch.branche_categorie.all %}
+
+		<a href="{% url 'web:fichier' cat=cat.id %}">{{ cat.nom_cat }}</a><br>
+
+	{% endfor %}
+
+{% endfor %}

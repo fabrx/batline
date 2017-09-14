@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block titre %}{% endblock  %}</title>
+    <meta charset="utf-8" />
+      {% load static %}
+    <link rel="stylesheet" type="text/css" href='{% static "/web/css/corps.css" %}'/>
+    <link rel="stylesheet" type="text/css" href='{% static "/web/css/menu.css" %}'/>
+    <script type="text/javascript" src="{% static 'web/js/jquery-1.9.1.min.js' %}"></script>
+   <script type="text/javascript" src=" {% static 'web/bootstrap/js/bootstrap.min.js' %} " ></script>
+   <link  rel="stylesheet" href="{% static 'web/bootstrap/css/bootstrap.min.css' %}" />
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+</head>
+<body>
+{% include "web/style.html" %}
+
+
+
+{% load staticfiles %}
+
+
+
+<!-- partie menu principale -->
+	<nav class="menu_principal">
+
+		<label for="menu-mobil" class="menu-mobil"><img src="{% static 'web/images/lala.jpg' %}" alt="logo" width="35" height="35" >
+    </label>
+		<input type="checkbox" id="menu-mobil" role="button">
+        <ul>
+        <!--  <li><a href="#"><img src="{% static 'web/images/lo.png' %}" alt="logo" class="ban"></a>
+				</li>-->
+          <li><a href="{% url 'web:accueil' %}" class="menu"><img src="{% static 'web/images/Home.png' %}" width="30" height="30"> Home</a>
+          </li>
+
+          <li><a href="{% url 'web:faculte' %}" class="menu"><img src="{% static 'web/images/facultés.png' %}" width="30" height="30"> Faculté</a>
+          </li>
+
+          <li><a href="#" class="menu"><img src="{% static 'web/images/upload.png' %}" width="30" height="30">  Publier</a>
+          	<ul class="sous_menu">
+          		<li><a href="#"><img src="{% static 'web/images/compte.png' %}" width="20" height="20">  Connexion</a></li>
+          		<li><a href="#"><img src="{% static 'web/images/inscription.png' %}" width="20" height="20">  Inscription</a></li>
+          	</ul>
+          </li>
+          <li><a href="{% url 'web:contact' %}" class="menu"><img src="{% static 'web/images/mail.png' %}" width="30" height="30"> Contact</a></li>
+
+          <li><a href="#" class="menu"><img src="{% static 'web/images/apro.png' %}" width="30" height="30">  A propos</a></li>
+        </ul>
+  </nav>
+
+
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% include "web/base.html" %}
+
+<div class="partie_centrale">
+{% for prom in p %}
+
+	<a href="{% url 'web:branche' cle=prom.id %}">{{ prom.nom_promo }}</a>
+	<br/><br/>
+
+{% endfor %}
+</div>
+{% include "web/pieds.html" %}

@@ -1,0 +1,24 @@
+{% include "web/base.html" %}
+<div class="contact">
+  <h2>Contact</h2>
+    <form action="insert_sujet.php" method="post">
+      <table>
+        <tr><td>
+        Prenom : 
+        </td><td>
+        <input type="text" name="auteur" maxlength="30" size="45">
+        </td></tr><tr><td>
+        E-mail :
+        </td><td>
+        <input type="text" name="titre" maxlength="50" size="45">
+        </td></tr><tr><td>
+        Message :
+        </td><td>
+        <textarea name="message" cols="50" rows="10"></textarea>
+        </td></tr><tr><td><td align="right">
+        <input type="submit" name="go" value="Envoyer" class="boutton">
+        </td></tr>
+      </table>
+    </form>
+</div>
+{% include "web/pieds.html" %}

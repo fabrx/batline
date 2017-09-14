@@ -1,0 +1,18 @@
+{% include "web/base.html" %}
+
+<div class="partie_centrale">
+{% for fich in f %}
+	
+	auteur : {{ fich.nom_auteur}}<br/>
+	universite : {{ fich.universite }}<br/>
+	intitule : {{ fich.titre_document }}<br/>
+	<a href="{{ fich.fichier.url }}">{{ fich.titre_document }}</a><br/>
+	date de publication : {{ fich.date_pub }}<br/><br/>
+
+{% endfor %}
+</div>
+
+ 
+  
+{% include "web/pieds.html" %}
+
