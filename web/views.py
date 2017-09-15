@@ -100,3 +100,10 @@ def fichier(request,cat):
 
 def contact(request):
     return render(request,"web/contact.html")
+
+def forum(request,cle):
+    #forum=Forum.objects.all()
+    return render(request,"web/forum.html",)
+
+def commentaire(request):
+    return render(request,"web/commentaire.html")

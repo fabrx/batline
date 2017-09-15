@@ -1,15 +1,20 @@
-<form action="#" method="post">
-<table>
-<tr><td>
-Mail:
-</td><td>
-<input type="text" name="titre" maxlength="50" size="50">
-</td></tr><tr><td>
-Message:
-</td><td>
-<textarea name="message" cols="50" rows="10"></textarea>
-</td></tr><tr><td><td align="right">
-<input type="submit" name="go" value="Commenter">
-</td></tr>
-</table>
-</form>	
+<div id="forum">
+	<h1>FORUM</h1>
+	<div class="titre-forum">
+		
+			<a href="{% url 'web:forum'%}">Titre</a>: Date : par : <br><br>
+		
+	</div>
+
+	<div class="post-commentaire">
+		<p>
+		{% with phrase="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam orci tortor, tincidunt ut lobortis egestas, cursus non velit. Phasellus nec metus velit. Vestibulum egestas lorem aliquam lacus rhoncus, et ornare augue accumsan. Nullam porta, lectus tempor venenatis pulvinar, odio lacus facilisis tortor, dictum venenatis est velit sed massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque vel tristique nisi, vitae placerat odio."  %}     
+		{{ phrase|truncatechars:100 }}
+		{% endwith %}
+			
+
+		</p>
+		<a href="{% url 'web:commentaire'%}">Commenter</a>
+	</div>
+
+</div>

@@ -17,6 +17,8 @@ urlpatterns=[
     url(r'^faculte/$',views.faculte,name="faculte"),
     url(r'^fichier/(?P<cat>[0-9]+)/$',views.fichier,name="fichier"),
     url(r'^branche/(?P<cle>[0-9]+)/$',views.branche,name="branche"),
-    url(r'^contact/$',views.contact,name="contact")
+    url(r'^contact/$',views.contact,name="contact"),
+    url(r'^forum/$',views.forum,name="forum"),
+    url(r'^commentaire/$',views.commentaire,name="commentaire")
 
 ]
