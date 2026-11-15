@@ -24,8 +24,9 @@ Puis ouvrir http://127.0.0.1:8000/ (redirige vers `/batline/accueil/`).
 | `/batline/promotion/<id>/` | promotions d'une faculté |
 | `/batline/branche/<id>/` | branches (cours) d'une promotion et leurs catégories |
 | `/batline/fichier/<id>/` | documents d'une catégorie |
-| `/batline/discussions/` | derniers posts |
+| `/batline/forum/` | forum : discussions paginées, commentaires sur chaque discussion |
 | `/batline/new-post/`, `/batline/new-file/` | publier (connexion requise) |
+| `/batline/contact/` | formulaire de contact (messages lisibles dans `/admin/`) |
 | `/batline/register/`, `/batline/login/` | inscription / connexion |
 | `/admin/` | administration |
 

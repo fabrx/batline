@@ -1,20 +1,15 @@
+{# Widget "Forum" affiche a cote de la liste des facultes. Attend `derniers_posts`. #}
 <div id="forum">
 	<h1>FORUM</h1>
-	<div class="titre-forum">
-		
-			<a href="{% url 'web:forum'%}">Titre</a>: Date : par : <br><br>
-		
+	{% for p in derniers_posts %}
+	<div class="discussion">
+		<a href="{% url 'web:details' pk=p.pk %}"><b>{{ p.titre }}</b></a><br>
+		<span class="meta">{{ p.date_pub|date:"d/m/Y H:i" }}{% if p.auteur %} &middot; par {{ p.auteur.username }}{% endif %} &middot; {{ p.nb_commentaires }} commentaire{{ p.nb_commentaires|pluralize }}</span>
+		<p>{{ p.body|truncatechars:100 }}</p>
 	</div>
-
-	<div class="post-commentaire">
-		<p>
-		{% with phrase="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam orci tortor, tincidunt ut lobortis egestas, cursus non velit. Phasellus nec metus velit. Vestibulum egestas lorem aliquam lacus rhoncus, et ornare augue accumsan. Nullam porta, lectus tempor venenatis pulvinar, odio lacus facilisis tortor, dictum venenatis est velit sed massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque vel tristique nisi, vitae placerat odio."  %}     
-		{{ phrase|truncatechars:100 }}
-		{% endwith %}
-			
-
-		</p>
-		<a href="{% url 'web:commentaire'%}">Commenter</a>
-	</div>
-
+	{% empty %}
+	<p>Aucune discussion pour le moment.</p>
+	{% endfor %}
+	<a href="{% url 'web:forum' %}">Voir toutes les discussions</a>
+	{% if user.is_authenticated %} &middot; <a href="{% url 'web:new-post' %}">Nouvelle discussion</a>{% endif %}
 </div>

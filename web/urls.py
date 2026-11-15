@@ -21,6 +21,5 @@ urlpatterns = [
     path("branche/<int:cle>/", views.branche, name="branche"),
     path("fichier/<int:cat>/", views.fichier, name="fichier"),
     path("contact/", views.contact, name="contact"),
-    path("forum/", views.forum, name="forum"),
-    path("commentaire/", views.commentaire, name="commentaire"),
+    path("forum/", views.discussions, name="forum"),
 ]

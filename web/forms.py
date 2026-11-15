@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from .models import Fichier, Membre, Post
+from .models import Commentaire, Fichier, Membre, MessageContact, Post
 
 
 class PostForm(ModelForm):
@@ -28,3 +28,15 @@ class RegistrationForm(UserCreationForm):
             'promotion',
             'email',
         )
+
+
+class CommentaireForm(ModelForm):
+    class Meta:
+        model=Commentaire
+        fields=["texte"]
+
+
+class ContactForm(ModelForm):
+    class Meta:
+        model=MessageContact
+        fields=["nom","email","message"]

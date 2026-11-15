@@ -51,6 +51,13 @@
           <li><a href="#" class="menu"><img src="{% static 'web/images/apro.png' %}" width="30" height="30">  A propos</a></li>
         </ul>
   </nav>
+{% if messages %}
+  <div class="messages-flash">
+  {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">{{ message }}</div>
+  {% endfor %}
+  </div>
+{% endif %}
 
 
 

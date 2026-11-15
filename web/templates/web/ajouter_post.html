@@ -1,8 +1,9 @@
-
-
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.as_p }}
-  <input type="submit" value="Ajouter" />
-</form>
-
+{% include "web/base.html" %}
+<div class="partie_centrale">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Publier" class="boutton" />
+  </form>
+</div>
+{% include "web/pieds.html" %}

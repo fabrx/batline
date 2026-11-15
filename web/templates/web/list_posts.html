@@ -1,9 +1,26 @@
 {% include "web/base.html" %}
 <div class="partie_centrale">
-{% for p in posts %}
-  Titre : <a href="{% url 'web:details' pk=p.id %}">{{ p.titre }}</a>&nbsp;publie le {{ p.date_pub }}<br>
-{% empty %}
-  Aucune discussion pour le moment.
-{% endfor %}
+  <h2>Forum</h2>
+  {% if user.is_authenticated %}
+    <p><a class="btn btn-primary" href="{% url 'web:new-post' %}">Nouvelle discussion</a></p>
+  {% else %}
+    <p><a href="{% url 'web:login' %}?next={{ request.path|urlencode }}">Connectez-vous</a> pour lancer une discussion.</p>
+  {% endif %}
+  {% for p in posts %}
+  <div class="discussion">
+    <a href="{% url 'web:details' pk=p.pk %}"><b>{{ p.titre }}</b></a><br>
+    <span class="meta">{{ p.faculte }} &middot; {{ p.date_pub|date:"d/m/Y H:i" }}{% if p.auteur %} &middot; par {{ p.auteur.username }}{% endif %} &middot; {{ p.nb_commentaires }} commentaire{{ p.nb_commentaires|pluralize }}</span>
+    <p>{{ p.body|truncatechars:200 }}</p>
+  </div>
+  {% empty %}
+    <p>Aucune discussion pour le moment.</p>
+  {% endfor %}
+  {% if page.has_other_pages %}
+  <div class="pagination-forum">
+    {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">&laquo; Precedent</a>{% endif %}
+    Page {{ page.number }} / {{ page.paginator.num_pages }}
+    {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Suivant &raquo;</a>{% endif %}
+  </div>
+  {% endif %}
 </div>
 {% include "web/pieds.html" %}

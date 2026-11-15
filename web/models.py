@@ -116,8 +116,37 @@ class Post(models.Model):
     #fichier_post=models.FileField(null=True)
     date_pub=models.DateTimeField(auto_now_add=True,auto_now=False,verbose_name="Ajoute le")
     date_modif=models.DateTimeField(auto_now_add=False,auto_now=True)
-    fichier=models.ForeignKey(Fichier,on_delete=models.CASCADE)
-
+    fichier=models.ForeignKey(Fichier,on_delete=models.SET_NULL,null=True,blank=True,verbose_name="Fichier joint")
+    auteur=models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
 
     def __str__(self):
         return self.titre
+
+
+class Commentaire(models.Model):
+    post=models.ForeignKey(Post,on_delete=models.CASCADE,related_name="commentaires")
+    auteur=models.ForeignKey(User,on_delete=models.CASCADE)
+    texte=models.TextField(verbose_name="Commentaire")
+    date_pub=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering=["date_pub"]
+
+    def __str__(self):
+        return "%s sur %s"%(self.auteur,self.post)
+
+
+class MessageContact(models.Model):
+    nom=models.CharField(max_length=50,verbose_name="Prenom")
+    email=models.EmailField(verbose_name="E-mail")
+    message=models.TextField()
+    date_envoi=models.DateTimeField(auto_now_add=True)
+    lu=models.BooleanField(default=False)
+
+    class Meta:
+        ordering=["-date_envoi"]
+        verbose_name="message de contact"
+        verbose_name_plural="messages de contact"
+
+    def __str__(self):
+        return "%s <%s>"%(self.nom,self.email)

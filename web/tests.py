@@ -6,7 +6,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from .models import Branche, Categorie, Faculte, Fichier, Membre, Post, Promotion, Universite
+from .models import (Branche, Categorie, Commentaire, Faculte, Fichier, Membre,
+                     MessageContact, Post, Promotion, Universite)
 
 MEDIA_TMP = tempfile.mkdtemp()
 
@@ -97,6 +98,65 @@ class BatlineTests(TestCase):
         })
         post = Post.objects.get(titre="Question")
         self.assertRedirects(resp, reverse("web:details", args=[post.pk]))
+        self.assertEqual(post.auteur.username, "bob")
+
+    def test_post_sans_fichier_joint(self):
+        User.objects.create_user("bob", password="motdepasse-solide")
+        self.client.login(username="bob", password="motdepasse-solide")
+        self.client.post(reverse("web:new-post"), {"faculte": self.fac.pk, "titre": "Sans PJ", "body": "x"})
+        self.assertTrue(Post.objects.filter(titre="Sans PJ", fichier__isnull=True).exists())
+
+    # --- forum / commentaires --------------------------------------------------
+    def test_widget_forum_affiche_les_vrais_posts(self):
+        Post.objects.create(faculte=self.fac, titre="Horaire examens", body="Quand ?")
+        resp = self.client.get(reverse("web:faculte"))
+        self.assertContains(resp, "Horaire examens")
+        self.assertNotContains(resp, "Lorem ipsum")
+
+    def test_forum_pagination(self):
+        for i in range(12):
+            Post.objects.create(faculte=self.fac, titre="Sujet %02d" % i, body="x")
+        p1 = self.client.get(reverse("web:forum"))
+        self.assertEqual(len(p1.context["posts"]), 10)
+        p2 = self.client.get(reverse("web:forum") + "?page=2")
+        self.assertEqual(len(p2.context["posts"]), 2)
+
+    def test_commenter_un_post(self):
+        post = Post.objects.create(faculte=self.fac, titre="Examen", body="Date ?")
+        url = reverse("web:details", args=[post.pk])
+        # Anonyme : renvoye vers la connexion, rien n'est enregistre
+        resp = self.client.post(url, {"texte": "spam"})
+        self.assertRedirects(resp, reverse("web:login") + "?next=" + url)
+        self.assertEqual(Commentaire.objects.count(), 0)
+        # Connecte : commentaire enregistre et affiche
+        User.objects.create_user("bob", password="motdepasse-solide")
+        self.client.login(username="bob", password="motdepasse-solide")
+        resp = self.client.post(url, {"texte": "Lundi prochain"})
+        self.assertRedirects(resp, url + "#commentaires", fetch_redirect_response=False)
+        self.assertContains(self.client.get(url), "Lundi prochain")
+        self.assertContains(self.client.get(reverse("web:forum")), "1 commentaire")
+
+    def test_commentaire_vide_refuse(self):
+        post = Post.objects.create(faculte=self.fac, titre="Examen", body="Date ?")
+        User.objects.create_user("bob", password="motdepasse-solide")
+        self.client.login(username="bob", password="motdepasse-solide")
+        resp = self.client.post(reverse("web:details", args=[post.pk]), {"texte": ""})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(Commentaire.objects.count(), 0)
+
+    # --- contact ---------------------------------------------------------------
+    def test_formulaire_contact(self):
+        resp = self.client.post(reverse("web:contact"), {
+            "nom": "Alice", "email": "alice@example.com", "message": "Bonjour",
+        }, follow=True)
+        self.assertContains(resp, "bien ete envoye")
+        self.assertEqual(MessageContact.objects.get().nom, "Alice")
+        self.assertNotContains(self.client.get(reverse("web:contact")), "insert_sujet.php")
+
+    def test_formulaire_contact_email_invalide(self):
+        resp = self.client.post(reverse("web:contact"), {"nom": "A", "email": "pas-un-email", "message": "x"})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(MessageContact.objects.count(), 0)
 
     # --- inscription / connexion ---------------------------------------------
     def test_inscription_cree_un_membre_et_connecte(self):
