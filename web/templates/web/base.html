@@ -4,10 +4,10 @@
 	<title>{% block titre %}{% endblock  %}</title>
     <meta charset="utf-8" />
       {% load static %}
-    <link rel="stylesheet" type="text/css" href='{% static "/web/css/corps.css" %}'/>
-    <link rel="stylesheet" type="text/css" href='{% static "/web/css/menu.css" %}'/>
+    <link rel="stylesheet" type="text/css" href='{% static "web/css/corps.css" %}'/>
+    <link rel="stylesheet" type="text/css" href='{% static "web/css/menu.css" %}'/>
     <script type="text/javascript" src="{% static 'web/js/jquery-1.9.1.min.js' %}"></script>
-   <script type="text/javascript" src=" {% static 'web/bootstrap/js/bootstrap.min.js' %} " ></script>
+   <script type="text/javascript" src="{% static 'web/bootstrap/js/bootstrap.min.js' %}" ></script>
    <link  rel="stylesheet" href="{% static 'web/bootstrap/css/bootstrap.min.css' %}" />
    <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
@@ -16,7 +16,6 @@
 
 
 
-{% load staticfiles %}
 
 
 
@@ -35,10 +34,16 @@
           <li><a href="{% url 'web:faculte' %}" class="menu"><img src="{% static 'web/images/facultés.png' %}" width="30" height="30"> Faculté</a>
           </li>
 
-          <li><a href="#" class="menu"><img src="{% static 'web/images/upload.png' %}" width="30" height="30">  Publier</a>
+          <li><a href="{% url 'web:discussions' %}" class="menu"><img src="{% static 'web/images/upload.png' %}" width="30" height="30">  Publier</a>
           	<ul class="sous_menu">
-          		<li><a href="#"><img src="{% static 'web/images/compte.png' %}" width="20" height="20">  Connexion</a></li>
-          		<li><a href="#"><img src="{% static 'web/images/inscription.png' %}" width="20" height="20">  Inscription</a></li>
+          		{% if user.is_authenticated %}
+          		<li><a href="{% url 'web:new-file' %}"><img src="{% static 'web/images/doc.png' %}" width="20" height="20">  Publier un fichier</a></li>
+          		<li><a href="{% url 'web:new-post' %}"><img src="{% static 'web/images/upload.png' %}" width="20" height="20">  Nouveau post</a></li>
+          		<li><form method="post" action="{% url 'web:logout' %}">{% csrf_token %}<button type="submit" class="btn btn-link">Deconnexion ({{ user.username }})</button></form></li>
+          		{% else %}
+          		<li><a href="{% url 'web:login' %}"><img src="{% static 'web/images/compte.png' %}" width="20" height="20">  Connexion</a></li>
+          		<li><a href="{% url 'web:register' %}"><img src="{% static 'web/images/inscription.png' %}" width="20" height="20">  Inscription</a></li>
+          		{% endif %}
           	</ul>
           </li>
           <li><a href="{% url 'web:contact' %}" class="menu"><img src="{% static 'web/images/mail.png' %}" width="30" height="30"> Contact</a></li>

@@ -4,10 +4,10 @@
     <title>{% block titre %}{% endblock  %}</title>
     <meta charset="utf-8" />
       {% load static %}
-    <link rel="stylesheet" type="text/css" href='{% static "/web/css/corps.css" %}'/>
-    <link rel="stylesheet" type="text/css" href='{% static "/web/css/menu.css" %}'/>
+    <link rel="stylesheet" type="text/css" href='{% static "web/css/corps.css" %}'/>
+    <link rel="stylesheet" type="text/css" href='{% static "web/css/menu.css" %}'/>
     <script type="text/javascript" src="{% static 'web/js/jquery-1.9.1.min.js' %}"></script>
-   <script type="text/javascript" src=" {% static 'web/bootstrap/js/bootstrap.min.js' %} " ></script>
+   <script type="text/javascript" src="{% static 'web/bootstrap/js/bootstrap.min.js' %}" ></script>
    <link  rel="stylesheet" href="{% static 'web/bootstrap/css/bootstrap.min.css' %}" />
   </head>
   <body>
@@ -16,6 +16,7 @@
    {% include "web/style.html" %}
 
    {% include "web/base.html" %}
+   {% block corps %}{% endblock %}
 
  
 

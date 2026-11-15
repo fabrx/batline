@@ -1,8 +1,10 @@
-{% for d in details %}
-Publie le {{ d.date_pub }}<br>
-Titre: {{ d.titre }}
-{{ d.body }}
-{% if d.fichier.image %}
-  {{ d.fichier.iimage }}
-{% endif %}
-{% endfor %}
+{% include "web/base.html" %}
+<div class="partie_centrale">
+  <h2>{{ post.titre }}</h2>
+  <p>Publie le {{ post.date_pub }} &middot; {{ post.faculte }}</p>
+  <p>{{ post.body|linebreaksbr }}</p>
+  {% if post.fichier %}
+    <a href="{{ post.fichier.fichier.url }}">{{ post.fichier }}</a>
+  {% endif %}
+</div>
+{% include "web/pieds.html" %}

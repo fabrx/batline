@@ -1,3 +1,9 @@
+{% include "web/base.html" %}
+<div class="partie_centrale">
 {% for p in posts %}
-  Titre:<a href="{% url 'web:detail-posts' pk=p.id %}">{{ p.titre }}</a>&nbsp;publie le {{ p.date_pub }}<br>
+  Titre : <a href="{% url 'web:details' pk=p.id %}">{{ p.titre }}</a>&nbsp;publie le {{ p.date_pub }}<br>
+{% empty %}
+  Aucune discussion pour le moment.
 {% endfor %}
+</div>
+{% include "web/pieds.html" %}
