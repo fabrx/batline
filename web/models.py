@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.dispatch import receiver
-from django.db.models.signals import post_save
 
 # Create your models here.
 
@@ -25,7 +23,7 @@ class Promotion(models.Model):
         ("L1","1er Licence"),
         ("L2","2eme Licence"),
         ("D1","1er Doctorat"),
-        ("D1","1er Doctorat"),
+        ("D2","2eme Doctorat"),
         ("D3","3eme Doctorat"),
     )
 	nom_promo=models.CharField(max_length=10,choices=PROMOTION)
@@ -73,7 +71,7 @@ class Universite(models.Model):
 #L'agent qui va soigner et envoyer les donnees
 class Membre(User):
 	GENRE=(
-	("Mr","Monsier"),
+	("Mr","Monsieur"),
 	("Mlle","Mademoiselle"),
 	("Mme","Madame")
 	)
@@ -82,24 +80,23 @@ class Membre(User):
 	universite=models.ForeignKey(Universite,on_delete=models.CASCADE)
 	faculte=models.ForeignKey(Faculte,on_delete=models.CASCADE)
 	promotion=models.ForeignKey(Promotion,on_delete=models.CASCADE)
-	user=models.OneToOneField(User,on_delete=models.CASCADE)
+	# Lien vers l'utilisateur parent (heritage multi-table). Il correspond a la
+	# colonne "user_id" deja presente dans la base.
+	user=models.OneToOneField(User,on_delete=models.CASCADE,parent_link=True,primary_key=True)
 
 	def __str__(self):
 		return "%s %s"%(self.first_name,self.last_name)
 
-# @receiver(post_save,sender=User)
-def create_user_profil(sender,**kwargs):
-    if kwargs['created']:
-        Membre.objects.create(user=kwargs['instance'])
-
-# @receiver(post_save,sender=User)
-post_save.connect(create_user_profil,sender=User)
+# Note : un signal post_save creait automatiquement un Membre pour chaque User,
+# mais Membre exige age/genre/universite/... : toute creation d'utilisateur
+# (createsuperuser compris) plantait. Le Membre est desormais cree par le
+# formulaire d'inscription (RegistrationForm).
 
 class Fichier(models.Model):
     TITRE=(("Prof","Professeur"),("CT","Chef de travaux"),("Ass","Assistant"))
     titre_document=models.CharField(max_length=25,verbose_name="Titre de document",null=True,blank=True)
     nom_auteur=models.CharField(max_length=30,verbose_name="Nom de l'auteur", null=True,blank=True)
-    titre_auteur=models.CharField(max_length=30, choices=TITRE, verbose_name="Titre e l'auteur", null=True, blank=True)
+    titre_auteur=models.CharField(max_length=30, choices=TITRE, verbose_name="Titre de l'auteur", null=True, blank=True)
     universite=models.CharField(max_length=40)
     date_pub=models.DateTimeField(auto_now=False,auto_now_add=True)
     date_modif=models.DateTimeField(auto_now=True,auto_now_add=False)
@@ -109,7 +106,7 @@ class Fichier(models.Model):
     promotion=models.ForeignKey(Promotion,on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.titre_document
+        return self.titre_document or self.fichier.name
 
 
 class Post(models.Model):
@@ -119,8 +116,37 @@ class Post(models.Model):
     #fichier_post=models.FileField(null=True)
     date_pub=models.DateTimeField(auto_now_add=True,auto_now=False,verbose_name="Ajoute le")
     date_modif=models.DateTimeField(auto_now_add=False,auto_now=True)
-    fichier=models.ForeignKey(Fichier,on_delete=models.CASCADE)
-
+    fichier=models.ForeignKey(Fichier,on_delete=models.SET_NULL,null=True,blank=True,verbose_name="Fichier joint")
+    auteur=models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
 
     def __str__(self):
         return self.titre
+
+
+class Commentaire(models.Model):
+    post=models.ForeignKey(Post,on_delete=models.CASCADE,related_name="commentaires")
+    auteur=models.ForeignKey(User,on_delete=models.CASCADE)
+    texte=models.TextField(verbose_name="Commentaire")
+    date_pub=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering=["date_pub"]
+
+    def __str__(self):
+        return "%s sur %s"%(self.auteur,self.post)
+
+
+class MessageContact(models.Model):
+    nom=models.CharField(max_length=50,verbose_name="Prenom")
+    email=models.EmailField(verbose_name="E-mail")
+    message=models.TextField()
+    date_envoi=models.DateTimeField(auto_now_add=True)
+    lu=models.BooleanField(default=False)
+
+    class Meta:
+        ordering=["-date_envoi"]
+        verbose_name="message de contact"
+        verbose_name_plural="messages de contact"
+
+    def __str__(self):
+        return "%s <%s>"%(self.nom,self.email)

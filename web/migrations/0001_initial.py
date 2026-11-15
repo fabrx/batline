@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('age', models.IntegerField()),
                 ('genre', models.CharField(choices=[('Mr', 'Monsier'), ('Mlle', 'Mademoiselle'), ('Mme', 'Madame')], max_length=20)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('faculte', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='web.Faculte')),
             ],
             options={

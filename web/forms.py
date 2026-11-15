@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from .models import *
+from .models import Commentaire, Fichier, Membre, MessageContact, Post
 
 
 class PostForm(ModelForm):
@@ -11,11 +11,11 @@ class PostForm(ModelForm):
 class FichierForm(ModelForm):
     class Meta:
         model=Fichier
-        exclude=["id"]
+        exclude=["date_pub","date_modif"]
 
 
 class RegistrationForm(UserCreationForm):
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model=Membre
         fields=(
             'username',
@@ -27,19 +27,16 @@ class RegistrationForm(UserCreationForm):
             'faculte',
             'promotion',
             'email',
-            'password1',
-            'password2'
         )
-    def save(self,commit=True):
-        user=super(RegistrationForm,self).save(commit=False)
-        user.username=self.cleaned_data['username']
-        user.first_name=self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.email = self.cleaned_data['email']
-        user.genre = self.cleaned_data['genre']
-        user.promotion = self.cleaned_data['promotion']
-        user.age = self.cleaned_data['age']
 
-        if commit:
-            user.save()
-        return user
+
+class CommentaireForm(ModelForm):
+    class Meta:
+        model=Commentaire
+        fields=["texte"]
+
+
+class ContactForm(ModelForm):
+    class Meta:
+        model=MessageContact
+        fields=["nom","email","message"]

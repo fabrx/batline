@@ -1,8 +1,31 @@
-{% for d in details %}
-Publie le {{ d.date_pub }}<br>
-Titre: {{ d.titre }}
-{{ d.body }}
-{% if d.fichier.image %}
-  {{ d.fichier.iimage }}
-{% endif %}
-{% endfor %}
+{% include "web/base.html" %}
+<div class="partie_centrale">
+  <p><a href="{% url 'web:forum' %}">&laquo; Retour au forum</a></p>
+  <h2>{{ post.titre }}</h2>
+  <p class="meta">{{ post.faculte }} &middot; publie le {{ post.date_pub|date:"d/m/Y H:i" }}{% if post.auteur %} par {{ post.auteur.username }}{% endif %}</p>
+  <p>{{ post.body|linebreaksbr }}</p>
+  {% if post.fichier %}
+    <p>Fichier joint : <a href="{{ post.fichier.fichier.url }}">{{ post.fichier }}</a></p>
+  {% endif %}
+
+  <h3 id="commentaires">Commentaires ({{ commentaires|length }})</h3>
+  {% for c in commentaires %}
+    <div class="commentaire">
+      <span class="meta">{{ c.auteur.username }} &middot; {{ c.date_pub|date:"d/m/Y H:i" }}</span>
+      <p>{{ c.texte|linebreaksbr }}</p>
+    </div>
+  {% empty %}
+    <p>Pas encore de commentaire.</p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Commenter" class="boutton">
+    </form>
+  {% else %}
+    <p><a href="{% url 'web:login' %}?next={{ request.path|urlencode }}">Connectez-vous</a> pour commenter.</p>
+  {% endif %}
+</div>
+{% include "web/pieds.html" %}
